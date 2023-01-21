@@ -1,19 +1,13 @@
+"use client"
 import { Header } from "./header"
 import { Main } from "./main";
 import { Footer } from "./footer";
+import { link  } from "../states";
+import { useAtom } from "jotai"
+import { useState } from "react";
 
 
-export default async function Escritores() {
-    return (
-        <>
-        <Header />
-        <Main />
-        <Footer />
-        </>
-    )
-}
-
-async function getLivros() {
+async function getLivros(link:any) {
    const res = await fetch('https://api-us-east-1-shared-usea1-02.hygraph.com/v2/cld4wsyv90p4j01tdcyai601e/master', {
         method: 'POST',
         headers: {
@@ -34,21 +28,19 @@ async function getLivros() {
         }
         `,})})
     const data = await res.json()
-    console.log(data.data.livros)
-    const escritores = await getEscritores()
 
-  const livros = data.data.livros.find((livro:any) => {
-    return livros.nomeDoEscritor === escritores.map((escritor:any) => {
-        return livro.nameDoEscritor
+  const escritores = await getEscritores(`${link}`)
+
+  const livros = escritores.data.map((escritor:any) => {
+    return data.data.livros.filter((livro:any) => {
+        return livro.nomeDoEscritor === escritor.name
     })
   })
-
-  console.log(livros)
 
   return livros
 }
 
-async function getEscritores() {
+async function getEscritores(link:string) {
     const res = await fetch('https://api-us-east-1-shared-usea1-02.hygraph.com/v2/cld4wsyv90p4j01tdcyai601e/master', {
         method: 'POST',
         headers: {
@@ -69,14 +61,41 @@ async function getEscritores() {
         `})})
     const data = await res.json()
 
-    console.log(data.data)
-    
-    return data.data.escritores
+    return {
+         data: data.data.escritores.filter((escritor:any) => {
+        return escritor.link === link
+    }),
+       links: data.data.escritores
+}
 }
 
 
 
 export async function generateStaticParams() { 
-    const escritores = await getEscritores(); 
-    return escritores.map((escritor:any) => ({ escritores: escritor.link, }));
+    const escritores = await getEscritores(""); 
+    return escritores.links.map((escritor:any) => ({ escritores: escritor.link, }));
+ }
+
+ export default  function Escritor({ params}:any ) {
+    const [livros,setLivros] = useState()
+    const [escritores,setEscritores] = useState()
+    getLivros(`${params.escritores}`).then(
+        (res:any) => {
+            setLivros(res)
+        }
+    )
+    getEscritores(`${params.escritores}`).then(
+        (res:any) => {
+            setEscritores(res)
+        }
+    )
+    const [link1, setLink] = useAtom(link)
+    setLink(`${params.escritores}`)
+    return (
+        <>
+          <Header />
+          <Main livros={livros} escritores={escritores} />
+          <Footer />
+        </>
+    )
  }

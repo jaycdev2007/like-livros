@@ -1,10 +1,17 @@
+"use client"
+
 import { Header } from "./header";
 import { Main } from "./main";
 import { Footer } from "./footer";
+import { useState } from "react"
 
-
-export default async function Home () {
-    const escritores = await getData()
+export default function Home () {
+    const [escritores,setEscritores] = useState()
+    getData().then(
+        (res) => {
+            setEscritores(res)
+        }
+    )
     return (
         <>
         <Header />

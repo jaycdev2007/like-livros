@@ -1,7 +1,7 @@
-export function Main() {
+export function Main(props:any) {
     return (
         <main>
-            <main></main>
+            
         </main>
     )
 }
