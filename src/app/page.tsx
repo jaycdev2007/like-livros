@@ -4,6 +4,7 @@ import { Header } from "./header";
 import { Main } from "./main";
 import { Footer } from "./footer";
 import { useState } from "react"
+import { SpinnerGap } from "phosphor-react"
 
 export default function Home () {
     const [escritores,setEscritores] = useState()
@@ -13,7 +14,12 @@ export default function Home () {
         }
     )
     if(!escritores) {
-        return null
+        return (
+            <div className="w-full h-screen flex justify-center items-center gap-4">
+               <SpinnerGap size={32} className="animate-spin"/> carregando...
+
+            </div>
+        )
     }
     return (
         <>

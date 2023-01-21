@@ -5,6 +5,7 @@ import { Footer } from "./footer";
 import { link  } from "../states";
 import { useAtom } from "jotai"
 import { useState } from "react";
+import { SpinnerGap } from "phosphor-react"
 
 
 async function getLivros(link:any) {
@@ -92,9 +93,17 @@ export async function generateStaticParams() {
     const [link1, setLink] = useAtom(link)
     setLink(`${params.escritores}`)
     if(!escritores) {
-        return null
+        return (
+            <div className="w-full h-screen flex justify-center items-center gap-4">
+                <SpinnerGap size={32} className="animate-spin"/> carregando...
+            </div>
+        )
     }else if(!livros) {
-        return null
+        return (
+            <div className="w-full h-screen flex justify-center items-center gap-4">
+                <SpinnerGap size={32} className="animate-spin"/> carregando...
+            </div>
+        )
     }
 
     return (

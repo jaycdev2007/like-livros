@@ -1,9 +1,11 @@
 "use client"
 import Image from "next/image";
+import { SpinnerGap } from "phosphor-react";
 import { useState } from "react";
 
 export function Main(props:any) {
     const [link,setLink] = useState<string | null>(null)
+    const [load,setLoad] = useState<boolean>(false)
     return (
         <main>
             <div className="flex flex-col justify-center items-center">
@@ -22,13 +24,15 @@ export function Main(props:any) {
                     <div key={key}>
                     <Image src={livro.capa.url} width={150} height={150} alt="capa do livro" className="rounded-lg my-3"/>
                     { link === null ?
-                    <button className="w-[150px] bg-gray-700 text-white hover:text-gray-700 hover:bg-white p-2 rounded-lg" onClick={async()=> {
-                       const linkDoLivro = livro.livro.url
+                    <button className="w-[150px] bg-gray-700 text-white hover:text-gray-700 hover:bg-white p-2 rounded-lg flex gap-2 items-center" onClick={async()=> {
+                       setLoad(true)
+                        const linkDoLivro = livro.livro.url
                        const res = await fetch(linkDoLivro)  
                        const file = await res.blob()
                        const url =  URL.createObjectURL(file)
                        setLink(url)
-                    }}>Baixar o livro</button>
+                       setLoad(false)
+                    }}>{ load && <SpinnerGap size={32} className="animate-spin"/>} Baixar o livro</button>
                : <a href={link} download className="w-[150px] bg-gray-700 text-white hover:text-gray-700 hover:bg-white p-2 rounded-lg" onClick={() => {
                 setLink(null)
                }}>Baixe agora</a> }
