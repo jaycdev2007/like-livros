@@ -17,9 +17,9 @@ export function Main(props:any) {
                 <h2 className="font-bold text-2xl my-8">Meus livros</h2>
                 <div className="flex gap-4 md:flex-col">
                 {
-                    props.livros[0].map((livro:any) => {
+                    props.livros[0].map((livro:any,key:any) => {
                     return (
-                    <div>
+                    <div key={key}>
                     <Image src={livro.capa.url} width={150} height={150} alt="capa do livro" className="rounded-lg my-3"/>
                     { link === null ?
                     <button className="w-[150px] bg-gray-700 text-white hover:text-gray-700 hover:bg-white p-2 rounded-lg" onClick={async()=> {
