@@ -91,6 +91,12 @@ export async function generateStaticParams() {
     )
     const [link1, setLink] = useAtom(link)
     setLink(`${params.escritores}`)
+    if(!escritores) {
+        return null
+    }else if(!livros) {
+        return null
+    }
+
     return (
         <>
           <Header />

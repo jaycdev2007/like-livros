@@ -12,6 +12,9 @@ export default function Home () {
             setEscritores(res)
         }
     )
+    if(!escritores) {
+        return null
+    }
     return (
         <>
         <Header />
